@@ -1,0 +1,103 @@
+:root{--fg:#1f2430;--bg:#f3f4f7;--card:#fff;--acc:#2457c5;--acc2:#e8eefc;--ng:#c62828;--ok:#2e7d32;--line:#d3d7df;--mute:#667085}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Yu Gothic UI","Hiragino Sans","Noto Sans JP","Meiryo",system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+header{background:#fff;border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+header h1{font-size:18px;margin:0}
+header .ver{font-size:12px;color:var(--mute)}
+nav{display:flex;gap:4px;padding:8px 16px 0;background:#fff;border-bottom:1px solid var(--line)}
+nav button{border:1px solid var(--line);border-bottom:none;background:#eef0f4;padding:8px 18px;border-radius:8px 8px 0 0;cursor:pointer;font-size:14px;color:var(--fg)}
+nav button.on{background:var(--bg);font-weight:700;color:var(--acc)}
+main{padding:16px;max-width:1500px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 10px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:8px 0}
+label{font-size:14px}
+select,input[type=number],button.btn{font:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:#fff}
+button.btn{cursor:pointer}
+button.btn.pri{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
+button.btn.sm{padding:3px 8px;font-size:12px}
+button.btn.on{background:var(--acc2);border-color:var(--acc);color:var(--acc);font-weight:700}
+button.btn:disabled{opacity:.5;cursor:default}
+table.cond{border-collapse:collapse;font-size:13px}
+table.cond th,table.cond td{border:1px solid var(--line);padding:4px 10px;text-align:center}
+table.cond th{background:#f0f2f6}
+.mute{color:var(--mute);font-size:13px}
+.note{font-size:13px;color:var(--mute);margin:6px 0}
+[hidden]{display:none!important}
+.bar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:5;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin-bottom:12px}
+.bar b{font-size:20px;font-variant-numeric:tabular-nums}
+.bar .warn{color:var(--ng)}
+/* ---- 速度 ---- */
+.sp-wrap{--fs:clamp(6px,calc((100vw - 72px)/42),20px)}
+@media(min-width:1000px){.sp-wrap{--fs:clamp(10px,calc((100vw - 120px)/84),18px)}.sp-cols{display:grid;grid-template-columns:auto auto;gap:16px;justify-content:center;align-items:start}}
+.sp-box{font-family:"MS Gothic","BIZ UDGothic","Osaka-Mono","Noto Sans Mono CJK JP","Yu Gothic",monospace;font-size:var(--fs);line-height:1.9;width:calc(var(--fs)*40);padding:10px 12px;border:1px solid var(--line);background:#fff;box-sizing:content-box;margin-bottom:12px}
+.sp-box h3{font-family:"Yu Gothic UI",system-ui,sans-serif;font-size:13px;margin:0 0 6px;color:var(--mute)}
+.sp-ref .ln{white-space:pre;height:1.9em}
+.sp-ref .ln:nth-child(even){background:#f7f8fb}
+#sp-input{display:block;width:100%;border:none;outline:none;resize:none;overflow:hidden;font:inherit;line-height:inherit;line-break:anywhere;word-break:break-all;overflow-wrap:anywhere;white-space:pre-wrap;padding:0;background:repeating-linear-gradient(#fff 0,#fff 1.9em,#f7f8fb 1.9em,#f7f8fb 3.8em);min-height:calc(1.9em*12)}
+#sp-cd{font-size:80px;text-align:center;color:var(--acc);padding:40px 0;font-weight:700}
+.stat{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.stat div{background:#f6f7fa;border:1px solid var(--line);border-radius:8px;padding:8px 14px;min-width:120px}
+.stat small{display:block;color:var(--mute);font-size:12px}
+.stat b{font-size:20px}
+.verdict{font-size:26px;font-weight:700;margin:6px 0}
+.verdict.ok{color:var(--ok)}.verdict.ng{color:var(--ng)}
+.diff{font-family:"MS Gothic","BIZ UDGothic","Noto Sans Mono CJK JP","Yu Gothic",monospace;line-height:1.9;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;word-break:break-all;line-break:anywhere;max-height:320px;overflow:auto}
+mark.bad{background:#ffd9d9;color:#b00020;padding:0}
+mark.gap{background:transparent;color:#b00020;font-weight:700}
+/* ---- 文書作成 ---- */
+.dgrid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:1000px){.dgrid{grid-template-columns:minmax(380px,.9fr) minmax(420px,1.1fr)}}
+.pv-head{font-size:13px;color:var(--mute);margin:0 0 4px}
+.pvwrap{position:relative;border:1px solid var(--line);background:#dfe3ea;overflow:hidden;margin-bottom:12px}
+.paper{position:relative;background:#fff;transform-origin:0 0;font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN","Noto Serif CJK JP",serif;color:#000}
+.paper.draft{background:#fffbe6}
+.pbody{position:absolute;overflow:hidden;line-height:1.7}
+.paper.guide .pbody{outline:1px dashed #8aa4d6}
+.pp{white-space:pre-wrap;word-break:break-all;line-break:anywhere;min-height:1.7em}
+.pbody table{border-collapse:collapse;width:max-content;max-width:100%}
+.pbody td{border:1px solid #000;padding:0 .5em;min-height:1.7em;line-height:1.7;white-space:pre-wrap;word-break:break-all}
+.blk{border:1px solid var(--line);border-radius:8px;background:#fafbfc;padding:6px 8px;margin-bottom:6px}
+.blk.cur{border-color:var(--acc);background:#f5f8ff}
+.blkbar{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-bottom:4px}
+.blkbar .sp{flex:1}
+.blk textarea{display:block;width:100%;resize:none;overflow:hidden;font:inherit;font-family:"MS Mincho","Yu Mincho",serif;font-size:15px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;min-height:30px;line-height:1.5}
+table.cellgrid{border-collapse:collapse;width:100%}
+table.cellgrid td{padding:2px}
+table.cellgrid input{width:100%;font:inherit;font-size:14px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;min-width:50px}
+table.cellgrid input.fc{border-color:var(--acc);background:#f1f6ff}
+.setup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.setup-grid label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--mute)}
+.setup-grid input{width:100%}
+.fmtok{color:var(--ok);font-size:13px}.fmtng{color:var(--ng);font-size:13px;font-weight:700}
+ol.items{margin:6px 0 0;padding-left:22px;font-size:14px}
+ol.items li{margin:3px 0}
+.help h3{font-size:15px;margin:16px 0 6px}
+.help ul{margin:4px 0;padding-left:20px;font-size:14px}
+.help p{font-size:14px;margin:6px 0}
+footer{padding:14px;text-align:center;color:var(--mute);font-size:12px}
+/* ---- タイピング練習（イージータイピスト） ---- */
+#tab-ty{text-align:center}
+#ty-q{font-size:clamp(28px,7vw,48px);margin-top:12px;font-weight:700;letter-spacing:2px;min-height:1.4em}
+#ty-q .kdone{color:#bbb}
+#ty-ro{font-size:clamp(20px,4.5vw,30px);margin-top:6px;font-family:Consolas,"Courier New",monospace;letter-spacing:2px;min-height:1.4em;word-break:break-all}
+#ty-ro .done{color:#bbb}
+#ty-ro .next{color:#e65100;border-bottom:3px solid #e65100}
+.ty-shake{animation:tyshake .2s}
+@keyframes tyshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ty-info{display:flex;justify-content:center;gap:30px;margin-top:10px;font-size:18px}
+#ty-ime{display:none;margin:12px auto 0;max-width:600px;padding:10px;background:#fff3e0;border:2px solid #ff9800;border-radius:8px;font-size:15px}
+.ty-kbwrap{overflow-x:auto;margin-top:18px}
+.ty-kb{margin:0 auto;width:680px;text-align:left}
+.ty-row{display:flex;gap:4px;margin-bottom:4px}
+.ty-key{position:relative;background:#fff;border:1px solid #999;border-radius:5px;width:44px;height:44px;line-height:44px;text-align:center;box-shadow:1px 1px 3px rgba(0,0,0,.2);transition:background .1s;flex:none;font-size:14px}
+.ty-key.home::after{content:"";position:absolute;left:16px;bottom:6px;width:12px;height:2px;background:#555}
+.ty-key.space{width:280px}
+.ty-key.next{background:#ffeb3b;border-color:#f57f17;font-weight:700}
+.ty-key.ok{background:#a5d6a7}
+.ty-key.ng{background:#ef9a9a}
+#ty-res p{font-size:16px;margin:6px 0}
+.ty-opt{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:8px 0;font-size:14px}
+.ty-opt label{cursor:pointer}
+#ty-game.hide-kb .ty-kbwrap{display:none}
+#ty-game.hide-ro #ty-ro{visibility:hidden}

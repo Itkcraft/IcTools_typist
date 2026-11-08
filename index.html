@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IcTools ワープロ検定シミュレーター</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>IcTools ワープロ検定シミュレーター</h1>
+  <span class="ver">v<span id="ver"></span>（ベータ）／ 非公式の練習用ツール</span>
+</header>
+<nav>
+  <button data-tab="speed" class="on">速度部門</button>
+  <button data-tab="doc">文書作成部門</button>
+  <button data-tab="ty">タイピング練習</button>
+  <button data-tab="admin">入力文の管理</button>
+  <button data-tab="help">基準・使い方・情報</button>
+</nav>
+<main>
+
+<!-- ================= 速度 ================= -->
+<section id="tab-speed">
+  <div id="sp-setup" class="card">
+    <h2>速度部門（正確な入力を判定／10分／A4縦・1行40文字）</h2>
+    <div class="row">
+      <label>級 <select id="sp-grade"></select></label>
+      <label>課題文 <select id="sp-text"><option value="r">ランダム</option><option value="0">課題文 ①</option><option value="1">課題文 ②</option></select></label>
+    </div>
+    <div id="sp-cond"></div>
+    <p class="note">本番形式です。入力中にミスは表示されません。IMEで日本語を入力してください。判定では改行は無視されます（1行40文字で自動的に折り返されます）。貼り付けは無効です。</p>
+    <div class="row"><button class="btn pri" id="sp-start">開始（3秒後にスタート）</button></div>
+  </div>
+
+  <div id="sp-exam" hidden>
+    <div class="bar">
+      <span>残り <b id="sp-timer">10:00</b></span>
+      <span>入力 <b id="sp-count">0</b> 字</span>
+      <span class="mute" id="sp-gname"></span>
+      <button class="btn" id="sp-finish">終了して採点</button>
+      <button class="btn" id="sp-abort">中止</button>
+    </div>
+    <div id="sp-cd" hidden>3</div>
+    <div class="sp-wrap" id="sp-body" hidden>
+      <div class="sp-cols">
+        <div class="sp-box sp-ref"><h3>課題文（1行40文字）</h3><div id="sp-ref"></div></div>
+        <div class="sp-box"><h3>ここに入力</h3><textarea id="sp-input" lang="ja" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off"></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sp-result" hidden>
+    <div class="card">
+      <h2>結果（<span id="sp-rname"></span>）</h2>
+      <div class="verdict" id="sp-verdict"></div>
+      <div class="stat" id="sp-stat"></div>
+      <p class="note" id="sp-formula"></p>
+      <h2 style="margin-top:14px">ミス箇所</h2>
+      <p class="note">赤＝誤り。課題文側は正しい文字（脱字は赤で表示）、入力側は打った文字（∧は脱字の位置、赤は誤字・余分）。</p>
+      <div class="mute">課題文</div><div class="diff" id="sp-dref"></div>
+      <div class="mute" style="margin-top:8px">あなたの入力</div><div class="diff" id="sp-dtyp"></div>
+      <div class="row"><button class="btn pri" id="sp-again">もう一度</button><button class="btn" id="sp-back">級を選び直す</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 文書作成 ================= -->
+<section id="tab-doc" hidden>
+  <div id="de-setup" class="card">
+    <h2>文書作成部門（正確で体裁のよい文書作成／20分／A4縦・1行40文字）</h2>
+    <div class="row">
+      <label>級 <select id="de-grade"></select></label>
+      <label>問題 <select id="de-prob"></select></label>
+    </div>
+    <div id="de-cond"></div>
+    <p class="note">原稿（手書き問題の代わり）を見ながら、ページ設定を行い、文書を作成します。100点満点から1ミスにつき2点減点、80点以上で合格。準1級・1級の「地図」は未対応です（表までの簡易版）。</p>
+    <div class="row"><button class="btn pri" id="de-start">開始</button></div>
+  </div>
+
+  <div id="de-exam" hidden>
+    <div class="bar">
+      <span>残り <b id="de-timer">20:00</b></span>
+      <span id="de-fmt" class="mute"></span>
+      <button class="btn pri" id="de-submit">提出して採点</button>
+      <button class="btn" id="de-abort">中止</button>
+    </div>
+    <div class="dgrid">
+      <div>
+        <p class="pv-head">原稿（この通りに作る。配置は原稿の見た目どおり）</p>
+        <div class="pvwrap" id="de-draft"></div>
+        <p class="pv-head">あなたの文書のプレビュー（点線＝本文の範囲）</p>
+        <div class="pvwrap" id="de-preview"></div>
+      </div>
+      <div>
+        <div class="card">
+          <h2>ページ設定</h2>
+          <div class="setup-grid">
+            <label>1行の文字数<input type="number" id="ps-cpl" min="10" max="80"></label>
+            <label>上余白(mm)<input type="number" id="ps-top" min="0" max="120"></label>
+            <label>下余白(mm)<input type="number" id="ps-bottom" min="0" max="120"></label>
+            <label>左余白(mm)<input type="number" id="ps-left" min="0" max="100"></label>
+            <label>右余白(mm)<input type="number" id="ps-right" min="0" max="100"></label>
+          </div>
+          <p class="note">用紙はA4縦に固定。文字の大きさは「本文の幅÷1行の文字数」で自動的に決まります。</p>
+        </div>
+        <div class="card">
+          <h2>文書の編集</h2>
+          <div class="row">
+            <button class="btn sm" id="ad-p">＋段落</button>
+            <button class="btn sm" id="ad-b">＋空行</button>
+            <button class="btn sm" id="ad-t">＋表</button>
+            <span class="mute">選択中のブロックの下に追加されます</span>
+          </div>
+          <div id="de-blocks"></div>
+          <p class="note">段落の入力欄で Enter を押すと次の段落ができます。空の段落が「空行」です。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="de-result" hidden>
+    <div class="card">
+      <h2>結果</h2>
+      <div class="verdict" id="de-verdict"></div>
+      <div class="stat" id="de-stat"></div>
+      <h2 style="margin-top:12px">ミスの内訳（1項目＝1ミス＝2点減点）</h2>
+      <ol class="items" id="de-items"></ol>
+    </div>
+    <div class="dgrid">
+      <div><p class="pv-head">原稿</p><div class="pvwrap" id="de-rdraft"></div></div>
+      <div><p class="pv-head">あなたの文書</p><div class="pvwrap" id="de-rmine"></div></div>
+    </div>
+    <div class="row"><button class="btn pri" id="de-again">もう一度</button><button class="btn" id="de-back">級・問題を選び直す</button></div>
+  </div>
+</section>
+
+<!-- ================= ヘルプ ================= -->
+<!-- ================= タイピング練習（イージータイピスト） ================= -->
+<section id="tab-ty" hidden>
+  <div id="ty-start" class="card">
+    <h2>イージータイピスト</h2>
+    <p class="note">キー配列を覚えるための、時間制限なしのやさしい練習です（ひらがなをローマ字で入力）。次に押すキーが黄色で光ります。</p>
+    <p class="note">日本語入力は <b>OFF</b>（キーボード左上の「半角/全角」キー）にしてね。</p>
+    <div class="ty-opt">
+      <label><input type="checkbox" class="ty-hk"> キーボードを非表示</label>
+      <label><input type="checkbox" class="ty-hr"> ローマ字を非表示</label>
+    </div>
+    <div class="row" style="justify-content:center"><button class="btn pri" id="ty-startbtn">スタート</button></div>
+  </div>
+  <div id="ty-game" hidden>
+    <div class="card">
+      <div id="ty-q"></div>
+      <div id="ty-ro"></div>
+      <div class="ty-info">
+        <div>問題 <b id="ty-count">0</b></div>
+        <div>ミス <b id="ty-miss">0</b></div>
+        <button class="btn sm" id="ty-abort">中止</button>
+      </div>
+      <div class="ty-opt">
+        <label><input type="checkbox" class="ty-hk"> キーボードを非表示</label>
+        <label><input type="checkbox" class="ty-hr"> ローマ字を非表示</label>
+      </div>
+      <div id="ty-ime">日本語入力がONになってるよ。「半角/全角」キーでOFFにしてね</div>
+      <div class="ty-kbwrap"><div class="ty-kb" id="ty-kb"></div></div>
+    </div>
+  </div>
+  <div id="ty-res" class="card" hidden></div>
+</section>
+
+<!-- ================= 入力文の管理 ================= -->
+<section id="tab-admin" hidden>
+  <div class="card">
+    <h2>入力文の管理</h2>
+    <p class="note">編集した内容は<b>このブラウザにだけ</b>保存されます（他の人の画面には反映されません）。みんなに公開したい時は、下の「texts.js を書き出す」で作ったファイルを js/texts.js と入れ替えて GitHub に push してください。</p>
+  </div>
+  <div class="card">
+    <h2>速度部門の課題文</h2>
+    <div class="row">
+      <label>対象 <select id="ad-band"><option value="A">4級・3級（帯A）</option><option value="B">準2級・2級（帯B）</option><option value="C">準1級・1級（帯C）</option></select></label>
+    </div>
+    <p class="note">級ごとの長さ制限で、長い文は最後の「。」で切られます。漢字含有率・長さの目安から外れると警告が出ます（保存は可能）。</p>
+    <div id="ad-sp-list"></div>
+    <div class="row">
+      <button class="btn sm" id="ad-sp-add">＋課題文を追加</button>
+      <button class="btn pri" id="ad-sp-save">保存</button>
+      <button class="btn" id="ad-sp-reset">この帯を既定値にもどす</button>
+      <span id="ad-sp-msg"></span>
+    </div>
+  </div>
+  <div class="card">
+    <h2>タイピング練習のお題</h2>
+    <p class="note">1行に1問、ひらがなで書きます（使える記号は「ー」「、」「。」）。 <span id="ad-ty-info" class="mute"></span></p>
+    <textarea id="ad-ty-text" rows="10" style="width:100%;font:inherit;font-size:15px;border:1px solid var(--line);border-radius:6px;padding:6px 8px" spellcheck="false"></textarea>
+    <div id="ad-ty-bad" class="fmtng"></div>
+    <div class="row">
+      <button class="btn pri" id="ad-ty-save">保存</button>
+      <button class="btn" id="ad-ty-reset">既定値にもどす</button>
+      <span id="ad-ty-msg"></span>
+    </div>
+  </div>
+  <div class="card">
+    <h2>バックアップ・公開用</h2>
+    <div class="row">
+      <button class="btn" id="ad-export">JSONを書き出す</button>
+      <label class="btn" style="cursor:pointer">JSONを読み込む<input type="file" id="ad-import" accept=".json,application/json" hidden></label>
+      <button class="btn" id="ad-export-js">texts.js を書き出す（公開用）</button>
+      <button class="btn" id="ad-clear">すべて既定値にもどす</button>
+      <span id="ad-io-msg"></span>
+    </div>
+  </div>
+</section>
+
+<section id="tab-help" hidden>
+  <div class="card help">
+    <h2>試験基準（日本情報処理検定協会「日本語ワープロ検定試験」1〜4級を参考）</h2>
+    <p>速度：10分／A4縦／1行40文字。手書き問題から入力。1ミスにつき減字。</p>
+    <table class="cond"><tr><th>級</th><th>1ミスの減字</th><th>漢字含有率</th><th>合格文字数</th></tr>
+      <tr><td>4級</td><td rowspan="2">1文字</td><td rowspan="2">23〜26%</td><td>200字以上</td></tr>
+      <tr><td>3級</td><td>300字以上</td></tr>
+      <tr><td>準2級</td><td rowspan="2">3文字</td><td rowspan="2">25〜30%</td><td>400字以上</td></tr>
+      <tr><td>2級</td><td>500字以上</td></tr>
+      <tr><td>準1級</td><td rowspan="2">5文字</td><td rowspan="2">25〜35%</td><td>600字以上</td></tr>
+      <tr><td>1級</td><td>700字以上</td></tr></table>
+    <p>文書作成：20分／A4縦／1行40文字。手書き問題からビジネス文書を作成（3級〜2級は表あり、準1級・1級は表と地図あり）。100点満点から1ミス2点減点、80点以上で合格。速度と文書作成の両方をクリアして、はじめてその級に合格です。</p>
+
+    <h3>このツールの判定ルール（公式の採点基準PDFを読めていないための仮定です）</h3>
+    <ul>
+      <li><b>速度</b>：課題文と入力を先頭から比べ、編集距離（誤字・脱字・余分な文字を各1ミス）でミス数を数えます。「入力文字数 − ミス数×減字数」が合格文字数以上なら合格。改行は無視。半角／全角の違いも誤りとして扱います。</li>
+      <li><b>文書作成</b>：原稿との違いを「1箇所＝1ミス」で数えます（連続した誤字は1箇所）。段落の不足・余分、配置（左・中央・右）、字下げ、表の行数・列数・セルの文字と配置、表の位置が対象です。</li>
+      <li><b>書式のミス</b>：①1行の文字数が40でない、②上下の余白の合計が用紙の1/2以上、または左右どちらかの余白が反対側の2倍以上、③解答が2ページにまたがる、をそれぞれ1ミスとします。</li>
+      <li>漢字含有率は「漢字の数÷全文字数（句読点を含む）」で計算しています。</li>
+      <li>公式の採点と結果が異なる場合があります。あくまで練習用の目安です。</li>
+    </ul>
+
+    <h3>使用ライブラリ</h3>
+    <p>外部ライブラリ・外部通信はありません（ブラウザ標準の機能のみ）。</p>
+
+    <h3>課題文・問題について</h3>
+    <p>課題文と文書作成の問題はすべてこのツール用に自作したものです。協会の過去問題は使用していません。本ツールは日本情報処理検定協会とは無関係の非公式ツールです。</p>
+
+    <h3>タイピング練習（イージータイピスト）</h3>
+    <p>キー配列を覚えるための、時間制限なしの練習です。ひらがなのお題をローマ字で入力します（si/shi など複数の打ち方に対応）。次に押すキーがJIS配列のキーボード上で光ります（キーボード・ローマ字は設定で非表示にできます）。ミスしたキーは入力されません。結果はこのブラウザ内（localStorage）に最新100件まで保存され、外部へは送信されません。履歴は画面には出ません。ブラウザの開発者ツール（F12）のコンソールで <code>ty.history()</code>（全件）または <code>ty.history(10)</code>（直近10件）を実行すると表示されます。検定の採点とは無関係です。</p>
+
+    <h3>更新履歴</h3>
+    <ul><li>0.7.1（ベータ）：タイトル画面とGitHub(Gist)への履歴保存を削除（0.6.0の状態にもどした）。</li>
+    <li>0.7.0（ベータ）：タイトル画面（ユーザー名・GitHubトークン入力）を追加。タイピング・速度・文書作成の結果を、利用者自身の公開Gistに保存。</li>
+    <li>0.6.0（ベータ）：「入力文の管理」タブを追加。課題文とタイピングのお題を編集・保存（ブラウザ内）、JSON／texts.js の書き出し・読み込みに対応。</li>
+    <li>0.5.1（ベータ）：GitHub Pages 公開用に、単一HTMLを index.html / css / js に分割（機能の変更なし）。</li>
+    <li>0.5.0（ベータ）：タイピング練習の履歴を画面から隠し、ブラウザのコンソールで ty.history() を実行すると表示する方式に変更。</li>
+    <li>0.4.0（ベータ）：タイピング練習の結果をブラウザ（localStorage）に記録し、履歴と自己ベストを表示。</li>
+    <li>0.3.0（ベータ）：タイピング練習に「キーボードを非表示」「ローマ字を非表示」の設定を追加。</li>
+    <li>0.2.0（ベータ）：「タイピング練習（イージータイピスト）」タブを追加。</li>
+    <li>0.1.0（ベータ）：初版。速度部門（4〜1級）、文書作成部門（表まで。地図は未対応）。</li></ul>
+  </div>
+</section>
+</main>
+<footer>IcTools ワープロ検定シミュレーター v<span id="ver2"></span></footer>
+
+<script src="js/texts.js"></script>
+<script src="js/store.js"></script>
+<script src="js/app.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
